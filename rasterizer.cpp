@@ -304,10 +304,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                         auto color_interpolated = Z * (alpha * t.color[0] / v[0].w() + beta * t.color[1] / v[1].w() + gamma * t.color[2] / v[2].w());
                         auto normal_interpolated = Z * (alpha * t.normal[0] / v[0].w() + beta * t.normal[1] / v[1].w() + gamma * t.normal[2] / v[2].w());
                         auto uv_interpolated = Z * (alpha * t.tex_coords[0] / v[0].w() + beta * t.tex_coords[1] / v[1].w() + gamma * t.tex_coords[2] / v[2].w());
-                        // this won't work
-                        float z_interpolated = (alpha * v[0].z() + beta * v[1].z() + gamma * v[2].z());
-                        // this works
-                        // float z_interpolated = Z;
+                        float z_interpolated = Z;
                         auto ind = (get_index(x, y) - 1) * 4 + index;
                         if (z_interpolated < depth_buf[ind])
                         {
