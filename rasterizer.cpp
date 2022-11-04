@@ -161,11 +161,21 @@ static bool insideTriangle(double x, double y, const Triangle &t)
     return (l > 0 && m > 0 && n > 0) || (l < 0 && m < 0 && n < 0);
 }
 
+float edgeFunction(const Vector4f &a, const Vector4f &b, const Vector4f &c) 
+{ 
+    return (c.x() - a.x()) * (b.y() - a.y()) - (c.y() - a.y()) * (b.x() - a.x()); 
+} 
+
 static std::tuple<float, float, float> computeBarycentric2D(float x, float y, const Vector4f *v)
 {
-    float c1 = (x * (v[1].y() - v[2].y()) + (v[2].x() - v[1].x()) * y + v[1].x() * v[2].y() - v[2].x() * v[1].y()) / (v[0].x() * (v[1].y() - v[2].y()) + (v[2].x() - v[1].x()) * v[0].y() + v[1].x() * v[2].y() - v[2].x() * v[1].y());
-    float c2 = (x * (v[2].y() - v[0].y()) + (v[0].x() - v[2].x()) * y + v[2].x() * v[0].y() - v[0].x() * v[2].y()) / (v[1].x() * (v[2].y() - v[0].y()) + (v[0].x() - v[2].x()) * v[1].y() + v[2].x() * v[0].y() - v[0].x() * v[2].y());
-    float c3 = (x * (v[0].y() - v[1].y()) + (v[1].x() - v[0].x()) * y + v[0].x() * v[1].y() - v[1].x() * v[0].y()) / (v[2].x() * (v[0].y() - v[1].y()) + (v[1].x() - v[0].x()) * v[2].y() + v[0].x() * v[1].y() - v[1].x() * v[0].y());
+    float area = edgeFunction(v[0], v[1], v[2]);
+    float w0 = edgeFunction(v[1], v[2], Vector4f{x, y, 0, 1});
+    float w1 = edgeFunction(v[2], v[0], Vector4f{x, y, 0, 1});
+    float w2 = edgeFunction(v[0], v[1], Vector4f{x, y, 0, 1});
+
+    float c1 = w0 / area;
+    float c2 = w1 / area;
+    float c3 = w2 / area;
     return {c1, c2, c3};
 }
 
